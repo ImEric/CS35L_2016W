@@ -38,7 +38,7 @@ Ex 1.5: Doint commands in Emacs
    1. M-x m a k e - d i r e c t o r y Enter ~ / j u n k
    2. C-x d ~/junk Enter
       C-x b h e l l o . c (Copy from Webpage) C-y C-x C-w h e l l o . c Enter
-   3. M-x C o m p i l i e Enter g c c SP h e l l o . c SP - o h e y Enter
+   3. M-x C o m p i l i e Enter g c c SP h e l l o . c SP - o SP h e y Enter
    4. M-x C o m p i l i e Enter . / h e y Enter
       C-x b * c o m p i l a t i o n *
       C-x C-w h e l l o - o u t Enter
