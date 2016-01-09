@@ -1,0 +1,85 @@
+1. man -k "keyword"
+   (this is done by searching through the options under man man)
+
+2. cp is found at: /bin/cp
+   wc is found at: /usr/bin/wc
+   (both are done using which command)
+
+3. w - Show who is logged on and what they are doing.
+   X - a portable, network-transparent window system
+   [ - No manual entry for [
+   (this is done by: find /usr/bin  -executable -name "?")
+   (or: find / -excutable -name "?")
+
+4. /etc/alternatives/emacs
+   (it can be done either by:  readlink /usr/bin/emacs)
+
+5. g+s: set-group-ID bits (Temporary permisson as group members)
+   o-x: remove the permision to execute a file from users
+   who are neither the owner nor members of the file’s group (man chmod)
+
+6. find /some_directory -mtime -21 -print
+   (man find)
+
+7. .
+   ./.login
+   ./.logout
+   ./.cshrc
+   ./.profile
+   ./.bash_logout
+   ./nsdefault
+   ./Desktop
+   ./Documents
+   ./Downloads
+   ./.emacs.d
+   ./.emacs.d/auto-save-list
+   ./.lesshst
+   ./.bash_profile
+   ./.bashrc
+   ./.bash_history
+   (To find under current directory: find . -mtime -21 -print)
+   (Or under the root directory: find / -mtime -21 -print 2</dev/null)
+   ("2</dev/null" prevents error(e.g: permission declined)from being printed)
+
+8. 20
+   (first find the directory of find using: which find)
+   (then using regex to find symbolic links: ls -la /bin | grep "\->" | wc -l)
+   (or simply find using -type -l | wc -l)
+
+9. 2003-08-29+12:56:11 /usr/lib/x86_64-redhat-linux5E/include/bits/stdio-lock.h
+   (Done by: find /usr/lib -type f -printf '%T+ %p\n' | sort | head -n 1)
+   (The idea is to sort the time they were created)
+   
+10. LC_* environment variables
+    (man locale)
+
+11. alphasort
+    alphasort64
+    qsort
+    versionsort
+    versionsort64
+    sort
+    tsort
+    (first go into emacs manual by C-h i, then use C-s to search for
+    "sort". Repeat the search by pressing C-s and record down matching results)
+
+12. C-M-a: Move to beginning of current of preceding defun
+    	   (For example, to the beginning of this text region)
+    C-M-b: Move backward over a balanced expression
+    C-M-c: Exit recursive edit
+    C-M-d: Down list
+    C-M-e: Move to end of defun
+    C-M-f: forward sexp
+    C-M-g: Not found
+    C-M-h: Put region around whole current or following defun
+    	   (For example, select the whole text region currently editing)
+    
+13. C-g: Cancel running or partialy typed command.
+    (For example, C-g during Incremental Search will abort current search)
+
+14. yank: "paste" back last thing killed from killing ring
+
+15. ls -l: List in long format.
+    (including permissions, users, date ..., excluding hidden files/directories)
+    C-x d: List directories too, but more detailed.
+    (including hidden files/directories, symbolic links -> hardlinks, etc)
