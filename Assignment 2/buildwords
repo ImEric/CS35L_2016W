@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#extract only the words between <td> and </td> 
+grep -Po '<td>\K.*(?=</td>)' hawaii.htm |
+
+#save the even lines(Hawaiin) to dic.txt
+sed '1d; n; d' |
+
+#remove <?>s within the words
+sed 's/<\/\?.>//g' |
+
+#to lower
+tr '[:upper:]' '[:lower:]' |
+
+#replace ` with '
+sed 's/`/'\''/g' |
+
+#seperate words containing ' ' or ', '
+sed 's/,\? /\n/g' |
+
+#delete non-hawaiin words
+sed '/[^p^k^'\''^m^n^w^l^h^a^e^i^o^u]/d' |
+
+#sort
+sort -u
+
+

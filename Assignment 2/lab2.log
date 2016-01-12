@@ -1,0 +1,7 @@
+
+cat hawaii.htm |
+tr '[:upper:]' '[:lower:]' |
+tr -cs '[A-Za-z]' '[\n*]' |
+sort -u |
+comm -23 - hwords |
+wc -l
