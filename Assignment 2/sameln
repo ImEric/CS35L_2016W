@@ -34,7 +34,7 @@ let MAXPOS=count-1
 for current in $(seq 0 $MAXPOS)
     do
     #compare the current file with file before it
-    for previous in $(seq 1 $current)
+    for previous in $(seq 0 $current)
     do
 	if [ $current -ne $previous ]
 	then
