@@ -1,4 +1,6 @@
-
+----------------------
+PART ONE: EXPLAINATION
+----------------------
 1. tr -c 'A-Za-z' '[\n*]'
    -c 'A-Za-z': complement of letters
    * Finds non-letters
@@ -42,7 +44,10 @@ tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words
    * Compare the output with the file words
    * Output lines apprearing only in the HTML
 
-buildwords:
+
+----------------------
+PART TWO: BUILDWORDS
+----------------------
 
 #!/bin/bash
 
@@ -70,9 +75,12 @@ sed '/[^(pk'\''mnwlhaeiou)]/d' |
 #sort
 sort -u
 
------------------------
-#english checker on web
+-------------------------
+PART THRRE: SPELL CHECKER
+-------------------------
 
+# English checker on web #
+--------------------------
 cat assign2.html |
 tr '[:upper:]' '[:lower:]' |
 tr -cs 'A-Za-z' '[\n*]' |
@@ -80,56 +88,68 @@ sort -u |
 comm -23 - words2 >en2web #save for later
 
 #count
-
 cat en2en |
 wc -l
 
 The output is: 39
 
------------------------
-#hawaiin checker on web
 
+# Hawaiin checker on web #
+--------------------------
 cat assign2.html |
 tr '[:upper:]' '[:lower:]' |
-tr -cs '[A-Za-z]' '[\n*]' |
+tr -cs '[A-Za-z]' '[\n*]' | # remove non-letters
+sed '/[^(pk'\''mnwlhaeiou)]/d' | # remove non-hawaiins
 sort -u |
 comm -23 - hwords >hw2web #save for later
 
 #count
-
 cat hw2web|
 wc -l
 
-The output is: 407
+The output is: 37
+
+
+#hawaiin checker on hwords#
 --------------------------
-
-#hawaiin checker on hwords
-
 cat hwords |
-tr -cs '[^(pk'\''mnwlhaeiou)]' '[\n*]' |
+tr -cs '[A-Za-z]' '[\n*]'| # remove non-letters
+sed '/[^(pk'\''mnwlhaeiou)]/d' | # remove non-hawaiins
 sort -u |
 comm -23 - hwords |
 wc -l
 
 The output is: 0
 
------------------------------------
-#misspeclled as English but not as Hawaiian
-#contained in en2web but not in hw2web
-#lines unique in en2web
-#(CARE: ensure it is Hawaiian words)
+
+# misspeclled as English but not as Hawaiian #
+----------------------------------------------
+#first,get rid of non-hawaiin words in en2web
+#then compare it with hwords
+
 
 cat en2web |
-sed '/[^(pk'\''mnwlhaeiou)]/d' |
-comm -23 - hw2web
+sed '/[^(pk'\''mnwlhaeiou)]/d' | # remove non-hawaiian
+comm -12 - hwords
 
-The output is: halau, lau, wiki
+The output is:
+halau
+lau
+wiki
 
------------------------------------
-#misspeclled as Hawaiin but not as English
-#contained in hw2web but not in en2web
-#lines unique in hw2web
 
-comm -13 en2web hw2web
+# misspeclled as Hawaiin but not as English #
+--------------------------------------------
+#contained in hw2web but not in words
 
-The output includes: word, why, 
+comm -12 hw2web words
+
+The output includes:
+...
+people
+paul
+mail
+like
+line
+link
+...
