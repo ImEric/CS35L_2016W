@@ -3,8 +3,14 @@
 dir=$1
 IFS=$'\n'
 
-#list all files/directories start with hidden files (already ordered)
+#list all files/directories
+#Since there may be some chars rank before '.' under ASCILL (like '#')
+#We manually put files start with '.' first
 RESULT="$(ls -a $dir | grep '^\.')"$'\n'"$(ls $dir)"
+
+#Otherwise, we could just use
+#RESULT="$(ls -a $dir)"
+
 #echo "${RESULT}"
 
 declare -a ARRAY
@@ -36,24 +42,21 @@ for current in $(seq 0 $MAXPOS)
     #compare the current file with file before it
     for previous in $(seq 0 $current)
     do
+	#no need to compare with itself
 	if [ $current -ne $previous ]
 	then
-	    #some of the entries may become hard links through the loop
-	    #thus check it before comparing
-	    if [ ! -L "${ARRAY[previous]}" ]
+	    #echo "Comparing ${ARRAY[current]} and ${ARRAY[$previous]}."
+      	    cmp -s "${ARRAY[previous]}" "${ARRAY[$current]}"
+	    
+	    #if the current file is a duplicate, create hard link
+	    if [ $? -eq 0 ] 
 	    then
-		#echo "Comparing ${ARRAY[current]} and ${ARRAY[$previous]}."
-		cmp -s "${ARRAY[previous]}" "${ARRAY[$current]}"
-		#if files are duplicates, create hard link
-		if [ $? -eq 0 ] 
-		then
-		    #echo "${ARRAY[current]} is duplicate."
-		    LINKNAME="${ARRAY[$current]}"
-		    rm "${ARRAY[$current]}"
-		    #echo "$LINKNAME is removed."
- 	    	    ln "${ARRAY[$previous]}" "$LINKNAME"
-		    break
-		fi
+		#echo "${ARRAY[current]} is a duplicate."
+		LINKNAME="${ARRAY[current]}"
+		rm "${ARRAY[current]}"
+		#echo "$LINKNAME is removed."
+ 	    	ln "${ARRAY[previous]}" "$LINKNAME"
+		break
 	    fi
 	fi
     done

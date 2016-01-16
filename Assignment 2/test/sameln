@@ -38,23 +38,19 @@ for current in $(seq 0 $MAXPOS)
     do
 	if [ $current -ne $previous ]
 	then
-	    #some of the terms may become hard links through the loop
-	    #thus check it before comparing
-	    if [ ! -L "${ARRAY[previous]}" ]
-	    then
+
 		echo "Comparing ${ARRAY[current]} and ${ARRAY[$previous]}."
 		cmp -s "${ARRAY[previous]}" "${ARRAY[$current]}"
 		#if files are duplicates, create hard link
 		if [ $? -eq 0 ] 
 		then
 		    echo "${ARRAY[current]} is duplicate."
-		    LINKNAME="${ARRAY[$current]}"
-		    rm "${ARRAY[$current]}"
+		    LINKNAME="${ARRAY[current]}"
+		    rm "${ARRAY[current]}"
 		    echo "$LINKNAME is removed."
- 	    	    ln "${ARRAY[$previous]}" "$LINKNAME"
+ 	    	    ln "${ARRAY[previous]}" "$LINKNAME"
 		    break
 		fi
-	    fi
 	fi
     done
 done
