@@ -121,7 +121,7 @@ The output is: 0
 
 cat en2web |
 sed '/[^(pk'\''mnwlhaeiou)]/d' |
-comm -23 - hw2web
+comm -3 - hwords
 
 The output is: halau, lau, wiki
 

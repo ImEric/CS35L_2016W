@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #extract only the words between <td> and </td> 
-grep -Po '<td>\K.*(?=</td>)' hawaii.htm |
+grep -Po '<td>\K.*(?=</td>)' |
 
 #save the even lines(Hawaiin) to dic.txt
 sed '1d; n; d' |

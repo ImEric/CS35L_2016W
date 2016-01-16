@@ -1,0 +1,61 @@
+#!/bin/bash
+
+dir=$1
+IFS=$'\n'
+
+#list all files/directories start with hidden files (already ordered)
+RESULT="$(ls -a $dir | grep '^\.')"$'\n'"$(ls $dir)"
+echo "${RESULT}"
+
+declare -a ARRAY
+count=0
+
+#put all files into an array
+for FILE in $RESULT
+do
+    #if it is not a symbolic link
+    if [ ! -L "$dir/$FILE" ]
+    then
+	#if it a regular file 
+	if [ -f "$dir/$FILE" ]
+	then
+	    ARRAY[$count]="$dir/$FILE"
+	    echo "${ARRAY[count]} added to array."
+	    ((count++))
+	    echo "There are $count files in the Array."
+	fi
+    fi
+done
+
+
+let MAXPOS=count-1
+
+#examine the array and find duplicates
+for current in $(seq 0 $MAXPOS)
+    do
+    #compare the current file with file before it
+    for previous in $(seq 1 $current)
+    do
+	if [ $current -ne $previous ]
+	then
+	    #some of the terms may become hard links through the loop
+	    #thus check it before comparing
+	    if [ ! -L "${ARRAY[previous]}" ]
+	    then
+		echo "Comparing ${ARRAY[current]} and ${ARRAY[$previous]}."
+		cmp -s "${ARRAY[previous]}" "${ARRAY[$current]}"
+		#if files are duplicates, create hard link
+		if [ $? -eq 0 ] 
+		then
+		    echo "${ARRAY[current]} is duplicate."
+		    LINKNAME="${ARRAY[$current]}"
+		    rm "${ARRAY[$current]}"
+		    echo "$LINKNAME is removed."
+ 	    	    ln "${ARRAY[$previous]}" "$LINKNAME"
+		    break
+		fi
+	    fi
+	fi
+    done
+done
+	    
