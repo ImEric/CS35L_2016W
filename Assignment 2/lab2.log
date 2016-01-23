@@ -54,7 +54,7 @@ PART TWO: BUILDWORDS
 #extract only the words between <td> and </td> 
 grep -Po '<td>\K.*(?=</td>)' |
 
-#save the even lines(Hawaiin) to dic.txt
+#save the even lines(Hawaiian) to dic.txt
 sed '1d; n; d' |
 
 #remove <?>s within the words
@@ -69,7 +69,7 @@ sed 's/`/'\''/g' |
 #seperate words containing ' ' or ', '
 sed 's/,\? /\n/g' |
 
-#delete non-hawaiin words
+#delete non-hawaiian words
 sed '/[^(pk'\''mnwlhaeiou)]/d' |
 
 #sort
@@ -94,12 +94,12 @@ wc -l
 The output is: 39
 
 
-# Hawaiin checker on web #
+# Hawaiian checker on web #
 --------------------------
 cat assign2.html |
 tr '[:upper:]' '[:lower:]' |
 tr -cs '[A-Za-z]' '[\n*]' | # remove non-letters
-sed '/[^(pk'\''mnwlhaeiou)]/d' | # remove non-hawaiins
+sed '/[^(pk'\''mnwlhaeiou)]/d' | # remove non-hawaiians
 sort -u |
 comm -23 - hwords >hw2web #save for later
 
@@ -110,11 +110,11 @@ wc -l
 The output is: 37
 
 
-#hawaiin checker on hwords#
+#hawaiian checker on hwords#
 --------------------------
 cat hwords |
 tr -cs '[A-Za-z]' '[\n*]'| # remove non-letters
-sed '/[^(pk'\''mnwlhaeiou)]/d' | # remove non-hawaiins
+sed '/[^(pk'\''mnwlhaeiou)]/d' | # remove non-hawaiians
 sort -u |
 comm -23 - hwords |
 wc -l
@@ -124,7 +124,7 @@ The output is: 0
 
 # misspeclled as English but not as Hawaiian #
 ----------------------------------------------
-#first,get rid of non-hawaiin words in en2web
+#first,get rid of non-hawaiian words in en2web
 #then compare it with hwords
 
 
@@ -138,7 +138,7 @@ lau
 wiki
 
 
-# misspeclled as Hawaiin but not as English #
+# misspeclled as Hawaiian but not as English #
 --------------------------------------------
 #contained in hw2web but not in words
 

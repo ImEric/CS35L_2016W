@@ -4,7 +4,7 @@ dir=$1
 IFS=$'\n'
 
 #list all files/directories
-#Since there may be some chars rank before '.' under ASCILL (like '#')
+#Since there may be some chars rank before '.' under ASCII (like '#')
 #We manually put files start with '.' first
 RESULT="$(ls -a $dir | grep '^\.')"$'\n'"$(ls $dir)"
 
