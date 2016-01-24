@@ -1,4 +1,4 @@
- #!/usr/bin/python
+#!/usr/bin/python
 
 import random, sys
 from optparse import OptionParser
@@ -21,7 +21,7 @@ class comm:
 
 	def orderedcomm(self, sp1, sp2, sp3):
 		output = ""
-		placeholder = "        "
+		ph = "        "
 		file1, file2 = self.lines1, self.lines2
 		len1, len2 = len(file1), len(file2)
 		i,j = 0,0
@@ -48,7 +48,7 @@ class comm:
 					if sp1:
 						output += file2[j]
 					else:
-						output += placeholder + file2[j]
+						output += ph + file2[j]
 				j += 1
 			#both in 1 & 2
 			else:
@@ -57,9 +57,9 @@ class comm:
 					if sp1 and sp2:
 						output += file1[i]
 					elif sp1 or sp2:
-						output += placeholder + file1[i]
+						output += ph + file1[i]
 					else:
-						output += placeholder + placeholder + file1[i]
+						output += ph + ph + file1[i]
 				i += 1
 				j += 1
 		#check for remaining list
@@ -72,13 +72,13 @@ class comm:
 				if sp1:
 					output += file2[n]
 				else:
-					output += placeholder + file2[n]
+					output += ph + file2[n]
 		return output
 
 
 	def unorderedcomm(self, sp1, sp2, sp3):
 		output = ""
-		placeholder = "        "
+		ph = "        "
 		file1, file2 = self.lines1, self.lines2
 
 		if sp1 and sp2 and sp3:
@@ -101,9 +101,10 @@ class comm:
 						if sp1 and sp2:
 							output += file1[i]
 						elif sp1 or sp2:
-							output += placeholder + file1[i]
+							output += ph + file1[i]
 						else:
-							output += placeholder + placeholder + file1[i]
+							output +=\
+							 ph + ph + file1[i]
 					#pop the element from file2
 					file2.pop(j)
 					found = True
@@ -120,7 +121,7 @@ class comm:
 				if sp1:
 					output += file2[k]
 				else:
-					output += placeholder + file2[k]
+					output += ph + file2[k]
 		return output
 
 
@@ -147,15 +148,15 @@ lines only in file1, lines only in file2, and lines in both files."""
                           usage=usage_msg)
     parser.add_option("-1", "--suppress1",
                       action="store_true", dest="suppress1", default=False,
-                      help="Suppress the output column of lines unique to FILE1.")
+                      help="Suppress the output column unique to FILE1.")
 
     parser.add_option("-2", "--suppress2",
                       action="store_true", dest="suppress2", default=False,
-                      help="Suppress the output column of lines unique to FILE2.")
+                      help="Suppress the output column unique to FILE2.")
 
     parser.add_option("-3", "--suppress3",
                       action="store_true", dest="suppress3", default=False,
-                      help="Suppress the output column of lines appear in both files.")
+                      help="Suppress the output column appear in both files.")
 
     parser.add_option("-u", "--unordered",
                       action="store_true", dest="unordered", default=False,
@@ -163,9 +164,9 @@ lines only in file1, lines only in file2, and lines in both files."""
 
     options, args = parser.parse_args(sys.argv[1:])
 
-    suppress1 = options.suppress1
-    suppress2 = options.suppress2
-    suppress3 = options.suppress3
+    sp1 = options.suppress1
+    sp2 = options.suppress2
+    sp3 = options.suppress3
 
     if len(args) != 2:
     	parser.error("Wrong number of input files.")
@@ -174,10 +175,12 @@ lines only in file1, lines only in file2, and lines in both files."""
     	generator = comm(args[0],args[1])
 
     	if options.unordered:
-    		sys.stdout.write(generator.unorderedcomm(suppress1,suppress2,suppress3))
+    		sys.stdout.write(\
+    			generator.unorderedcomm(sp1,sp2,sp3))
     	else:
     		if(generator.checkifsorted()):
-    			sys.stdout.write(generator.orderedcomm(suppress1,suppress2,suppress3))
+    			sys.stdout.write(\
+    				generator.orderedcomm(sp1,sp2,sp3))
     		else:
     			# if -u is not specified and the files are not sorted
     			parser.error("File not ordered")
