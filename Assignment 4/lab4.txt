@@ -1,0 +1,129 @@
+
+1. 	Clone Diffutils to local repository
+		$ git clone ~eggert/src/gnu/diffutils
+
+2. 	Save the log of changes to git-log.txt
+		$ git log > ~/git-log.txt
+
+3. 	Save the list of tags to git-tags.txt
+		$ git tag > ~/git-tags.txt
+
+4. 	Search for "maint: quote 'like this' ... " in git.lot.txt
+	Find the commit code and save the commit to quote-patch.txt
+		$ git show 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f > ~/quote-patch.txt
+
+5.	Checkout verson 3.0
+		$ git checkout v3.0
+	Copy the source files to ~/diffutils-3.0 for later use
+		$ cp -r ~/diffutils/src ~/diffutils-3.0
+
+6.	Patch v3.0 with quote-patch.txt 
+		$ patch -p1 < ~/quote-patch.txt
+				-strips only one / from the patch directory
+				-since I am currently at the parent directory of
+				-files to be patched
+	Result:
+		- 	Several patches were skipped 
+			as the file to be patch can't be found:
+				a/HACKING)
+				a/doc/diffutils.texi
+				a/man/help2man
+		-	Several Hunks failed and the rejects were saved.
+
+
+
+7.	See what modification has been made
+		$  git status
+
+		Changes not staged for commit:
+			modified:   NEWS
+			...
+			modified:   tests/help-version
+		Untracked files:
+			NEWS.orig
+			...
+			tests/help-version.orig
+
+8.	Learn the Emacs functions vc-diff (C-x v =) and vc-revert (C-x v u). 
+
+9.	Use Emacs to revert all the changes to files other than .c files
+		$ git ls-files -m | grep "[^c]$"
+		(display all modified files excluding .c files)
+
+			NEWS
+			README
+			TODO
+			doc/diagmeet.note
+			ms/config.bat
+			ms/config.site
+			po/en.po
+			src/diff.h
+			src/system.h
+			tests/help-version
+
+	Use emacs to apply the following on each files
+	(Required by Assign Specs)
+ 
+		C-x v =
+		C-x v u
+
+	Alternatively, to save time, one can try (not using Emacs)e
+		$ git checkout -- $(git ls-files -m | grep "[^c]$")
+
+
+	Now, undo all the changes to .c files 
+	(other than changes to character string constants)
+		$ git ls-files -m | grep ".c$"
+
+			src/analyze.c
+			src/cmp.c
+			src/context.c
+			src/diff.c
+			src/diff3.c
+			src/dir.c
+			src/ifdef.c
+			src/io.c
+			src/sdiff.c
+			src/side.c
+			src/util.c
+
+		C-x v =		:	Show vc-diff buffer 
+		C-M-i		:	Move to next Hunk
+		C-u C-c	C-a	:	Undo hunk
+
+10. Copy rejected patches into the corresponding .c files as needed.
+		$ ls -a ./src | grep ".c.rej$"
+
+			diff3.c.rej
+			diff.c.rej
+
+		C-c C-c 	: 	Go to source
+	
+
+11. $ git clean -f
+
+12. $ git diff > ~/quote-3.0-patch.txt
+
+	modified:   src/cmp.c
+	modified:   src/diff.c
+	modified:   src/diff3.c
+	modified:   src/dir.c
+	modified:   src/sdiff.c
+	modified:   src/util.c
+
+13. $ ./bootstrap
+	$ ./configure
+	$ make
+		(success)
+	$ make check
+		(gives some error, asked TA, replied that it does not matter)
+
+	$ diff . -
+	diff: cannot compare '-' to a directory
+
+	$ diff --help
+	To veriery every ` is changed to ',  check by $ diff --help | grep "\`"
+
+
+
+

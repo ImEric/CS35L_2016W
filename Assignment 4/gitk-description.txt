@@ -1,0 +1,7 @@
+Upper Right: 	Shows the timestamp for the commit
+Upper Middle: 	Shows the author of the commit along with email
+Upper Left: 	Shows the layout of the list of commits with 
+				additional information about merges and branches	
+Bottom Left:	Shows a diff of the changes to the files
+Middle Left: 	Shows all information about a commit
+Bottom Right: 	Shows the files that were impacted by the commit

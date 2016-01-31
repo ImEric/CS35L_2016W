@@ -1,0 +1,37 @@
+Name: Eric Hu
+
+Partner Name: Jingang He
+
+1.	Check out version 3.0 of Diffutils from your repository, 
+	into a new branch named “quote”.
+		$ git checkout v3.0 -b quote
+
+2.	Install your change into this new branch
+		$ patch -p1 < ~/quote-3.0-patch.txt
+
+
+3.	Learn how to use the Emacs function (C-x 4 a).
+
+4.	Use this Emacs function to compose an appropriate ChangeLog.
+		$ Emacs
+			C-x 4 a
+
+5.	Commit your changes to the new branch.
+		$ git add .
+		$ git commit -F ChangeLog
+
+6.	Use the command “git format-patch” to generate formatted-patch.txt. 
+		$ git format-patch -1 --stdout > ~/formatted-patch.txt
+
+7.	Verify that your partner's patch works.
+		$ git checkout v3.0 -b partner
+		$ git am < ~/formatted-patch.txt
+
+
+8. 	Verify that your ChangeLog entry works
+		$ make distdir
+
+9. 	Log in with ssh -X
+
+10. Clone emacs
+		$ git clone git://git.savannah.gnu.org/emacs.git	
