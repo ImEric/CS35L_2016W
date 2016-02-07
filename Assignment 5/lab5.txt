@@ -1,0 +1,123 @@
+1.	Download coreutils
+		
+		$ wget http://web.cs.ucla.edu/classes/winter16/cs35L/assign/coreutils-with-bug.tar.gz
+
+2.	Build
+		
+		$ cd coreutils-with-bug
+		$ ./configure
+		$ make <- failed
+
+	Error message:
+
+		utimens.h:2:5: error: conflicting types for 'futimens'
+	 	int futimens (int, char const *, struct timespec const [2]);
+	     	^
+		In file included from utimecmp.h:25:0,
+	                 	 from utimecmp.c:25:
+	    /usr/include/sys/stat.h:374:12: note: previous declaration of 'futimens' was here
+		extern int futimens (int __fd, __const struct timespec __times[2]) __THROW;   ^
+
+	The error arise because the funtion futimens is previously declared.
+		            
+
+3.	Applying the patch
+		
+		$ wget http://web.cs.ucla.edu/classes/winter16/cs35L/assign/coreutils.diff
+		$ patch -p0 < coreutils.diff
+
+	The following files get patched:
+
+		lib/utimens.c
+		lib/utimens.h
+		src/copy.c
+		src/tee.c
+		src/touch.c
+
+	Make again and now works
+
+		$ make
+
+4.	Reproduce the bug
+		
+		$ tmp=$(mktemp -d)
+		$ cd $tmp			
+		$ touch -d '1918-11-11 11:00 GMT' wwi-armistice
+		$ touch now
+		$ sleep 1
+		$ touch now1
+		$ TZ=UTC0 ~/coreutils-with-bug/src/ls -lt --full-time wwi-armistice now now1
+
+	The output is the following:
+
+		-rw-r--r-- 1 classuhu class 0 1918-11-11 11:00:00.000000000 +0000 wwi-armistice
+		-rw-r--r-- 1 classuhu class 0 2016-02-07 05:20:43.718036022 +0000 now1
+		-rw-r--r-- 1 classuhu class 0 2016-02-07 05:20:35.974757964 +0000 now
+
+
+5.	Use gdb to debug
+		$ emacs
+		$ M-x gud-gdb
+			gdb --fullname ~/coreutils-with-bug/src/ls
+			run -lt --full-time wwi-armistice now now1
+			break main
+			break sort_files
+			break compare_mtime
+			c (continue)
+			c
+			s (step)
+			s
+
+		Then we step into the function timespec_cmp
+
+			timespec_cmp (struct timespec a, struct timespec b)
+			{
+			=>int diff = a.tv_sec - b.tv_sec;
+			  return diff ? diff : a.tv_nsec - b.tv_nsec;
+			}
+
+		Since this function involves subtraction of two timestamps and the 0th day in unix is set to Jan 1 1970, any date before it is set to negative and vice versa. Also date is computed by miliseconds, so 1918 is a very large negative number and 2016 is a positive large number. Subtraction of this two numbers may result in overflow that causes the bug as diff is of type int. So we may want to change it to signed long.
+
+6.	Generating the patch
+		
+		$ cd ~/coreutils-with-bug/lib
+		$ git init
+		$ git add .
+		$ git commit -m ""
+		$ emacs ./timespec.h
+			C-x 4 a (And to the ChangeLog)
+			C-s timespec_cmp (search for timespec_cmp and change diff from int to long long)
+			C-x C-s (save)
+			C-x C-c (quit)
+		$ git add .
+		$ git commit -F ChangeLog
+		$ git format-patch -1 ./timespec.h --stdout > ~/lab5.diff
+		(This will generate a formatted patch file with ChangeLog included)
+
+7.	Reproduce the bug in home directory
+	
+		$ mkdir ~/temp
+		$ cd ~/temp
+		$ touch -d '1918-11-11 11:00 GMT' wwi-armistice
+		$ touch now
+		$ sleep 1
+		$ touch now1
+		$ TZ=UTC0 ls -lt --full-time wwi-armistice now now1
+
+	The output is the following:
+
+		-rw-r--r-- 1 classuhu class 0 2054-12-17 17:28:16.000000000 +0000 wwi-armistice
+		-rw-r--r-- 1 classuhu class 0 2016-02-07 05:02:06.808155000 +0000 now1
+		-rw-r--r-- 1 classuhu class 0 2016-02-07 05:01:17.454367000 +0000 now
+
+
+		Linux represents time relative to Jan 1 1970 12am <- 0th day
+		However, two file systems are using different types of record the time difference:
+			Local: signed 32
+			NDF: unsigned 32, only positive numbers
+		Since NDF only record down positive numbers, the difference between 1918 and 1970 is added to 1970 so the result becomes 2054.
+	
+
+
+
+

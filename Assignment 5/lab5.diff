@@ -1,0 +1,26 @@
+From 33786f6fb29d7cbef3ba4f2cdb6012405cfed583 Mon Sep 17 00:00:00 2001
+From: ERIC-Linux <erichuju@gmail.com>
+Date: Sun, 7 Feb 2016 00:59:25 -0800
+Subject: [PATCH] 2016-02-06  Ju Hu  <classuhu@lnxsrv02.seas.ucla.edu>
+
+	* timespec.h: (timespec_cmp): Change diff from type int to long long.
+---
+ timespec.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/timespec.h b/timespec.h
+index 9c630b8..4f565df 100644
+--- a/timespec.h
++++ b/timespec.h
+@@ -45,7 +45,7 @@ struct timespec
+ static inline int
+ timespec_cmp (struct timespec a, struct timespec b)
+ {
+-  int diff = a.tv_sec - b.tv_sec;
++  long long diff = a.tv_sec - b.tv_sec;
+   return diff ? diff : a.tv_nsec - b.tv_nsec;
+ }
+ 
+-- 
+1.8.5.3
+
