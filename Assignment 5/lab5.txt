@@ -83,7 +83,7 @@
 		$ cd ~/coreutils-with-bug/lib
 		$ git init
 		$ git add .
-		$ git commit -m ""
+		$ git commit -m “initial”
 		$ emacs ./timespec.h
 			C-x 4 a (And to the ChangeLog)
 			C-s timespec_cmp (search for timespec_cmp and change diff from int to long long)
