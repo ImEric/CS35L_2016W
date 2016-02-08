@@ -76,7 +76,12 @@
 			  return diff ? diff : a.tv_nsec - b.tv_nsec;
 			}
 
-		Since this function involves subtraction of two timestamps and the 0th day in unix is set to Jan 1 1970, any date before it is set to negative and vice versa. Also date is computed by miliseconds, so 1918 is a very large negative number and 2016 is a positive large number. Subtraction of this two numbers may result in overflow that causes the bug as diff is of type int. So we may want to change it to signed long.
+		Since this function involves subtraction of two timestamps and the 0th 
+		day in unix is set to Jan 1 1970, any date before it is set to negative 
+		and vice versa. Also date is computed by miliseconds, so 1918 is a very 
+		large negative number and 2016 is a positive large number. Subtraction 
+		of this two numbers may result in overflow that causes the bug as diff 
+		is of type int. So we may want to change it to signed long.
 
 6.	Generating the patch
 		
@@ -86,7 +91,7 @@
 		$ git commit -m “initial”
 		$ emacs ./timespec.h
 			C-x 4 a (And to the ChangeLog)
-			C-s timespec_cmp (search for timespec_cmp and change diff from int to long long)
+			C-s timespec_cmp (change diff from int to long long)
 			C-x C-s (save)
 			C-x C-c (quit)
 		$ git add .
@@ -112,10 +117,11 @@
 
 
 		Linux represents time relative to Jan 1 1970 12am <- 0th day
-		However, two file systems are using different types of record the time difference:
+		However, two  systems record the time differently:
 			Local: signed 32
 			NDF: unsigned 32, only positive numbers
-		Since NDF only record down positive numbers, the difference between 1918 and 1970 is added to 1970 so the result becomes 2054.
+		Since NDF only record down positive numbers, the difference between 1918
+		 and 1970 is added to 1970 so the result becomes 2054.
 	
 
 
