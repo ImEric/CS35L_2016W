@@ -78,9 +78,7 @@ int main(int argc, char **argv)
                 
                 
                 //free and reallocate new_word
-                //new_word = malloc(char_count * sizeof(char));
-                char *tmp = malloc(char_count*sizeof(char));
-                new_word = tmp;
+                new_word = malloc(char_count*sizeof(char));
             }
            
         }
@@ -126,7 +124,8 @@ int main(int argc, char **argv)
     
     if(words) {
         /* Free memory allocated by words array*/
-        for(int i = 0; i < word_count; i++)
+        int i;
+        for(i = 0; i < word_count; i++)
             free(words[i]);
         free(words);
         
