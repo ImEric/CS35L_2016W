@@ -1,0 +1,41 @@
+Questions:
+
+1.	Suppose the other teams really had been observing all the bytes going across
+	the network. Is your resulting network still secure? If so, explain why, and
+	explain whether your answer would change if 
+	(1) you assumed the other teams had also tapped your keyboard and hard 
+		observed all of your team's keystrokes
+	(2) you are booting off USB and you assume the other teams temporarily had 
+		physical control of the USB. 
+	If not, explain any weaknesses of your team's setups, focusing on possible 
+	attacks by such outside observers.
+
+	A:	Secure.
+		Even other teams really had been observing all the bytes going across
+		the network, our resulting netword is still sucure (or mostly). 
+		This is because the message they captured is being encrypted (RSA).
+		Any decription without the private key (which they don't have) would be 
+		impossible (or requrires tremendous amount of time with current devices.
+
+	(1)	Not secure. 
+		If the other teams had also tapped your keyboard and hard observed all 
+		of your team's keystrokes, then they have captured our raw data even 
+		before it get encrypted. 
+
+
+	(2)	Not secure.
+		If the other teams temporarily had physical control of the USB. Then 
+		firstly, the data stored in the device is compromised as they could 
+		access the unencrypted data directly. Moreover, they may have access to 
+		our ssh keys (in particular the private key), which means every message 
+		sent using the public key on the network could be easily decrypted. 
+
+
+2. 	Explain why the gpg --verify command in the following instructions doesn't
+	really verify that you personally created the tar file in question. How 
+	would you go about fixing this problem?
+
+	A:	The signiture only verifies the integrity of the zip file, meaning the 
+		file is unmodified since creation. However, it tells nothing about the 
+		creator of the file. One way to fix this problem could be using the 
+		audit commands in linux to check the owner of the file.

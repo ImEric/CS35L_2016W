@@ -1,0 +1,49 @@
+Partner: Jingang He
+
+Preparation:	
+
+	Make sure we have the right software
+		$ dpkg --get-selections | grep openssh
+	If not 
+		$ sudo apt-get install openssh-server
+
+Server side:
+
+1.	Generate Public and Private Keys
+		$ ssh-keygen
+
+2.	Create an client account
+		$ sudo useradd -d /home/jasonhe -m jasonhe
+		$ sudo passwd jasonhe
+			
+3.	Create .ssh directory for the client
+		$ cd /home/jasonhe
+		$ sudo mkdir .ssh
+
+4.	Change Ownershop and permission
+		$ sudo chown -R jasonhe .ssh
+		$ sudo chmod 700 .ssh
+
+5.	Check IP address
+		$ ifconfig
+			- 128.97.84.118
+
+
+Client Side:
+
+1.	Generate Public and Private Keys
+		$ ssh-keygen
+			- save to default dir
+			- enter a passphrase
+
+2.	Copy the public key to the server
+		$ ssh-copy-id -i erichuju@128.97.84.117
+
+3.	Add private key 
+		$ ssh-add
+
+4.	SSH to Server
+		$ ssh -X erichuju@128.97.84.117
+
+5.	Run xterm gui
+		$ xterm
