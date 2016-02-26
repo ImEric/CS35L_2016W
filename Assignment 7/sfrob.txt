@@ -1,0 +1,74 @@
+
+
+Create files with different sizes for testing
+	$ echo "_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 " >file
+	$ awk '{for(i=0;i<10;i++)print}' file > small_file.txt
+	$ awk '{for(i=0;i<1000;i++)print}' file > median_file.txt
+	$ awk '{for(i=0;i<100000;i++)print}' file > large_file.txt
+
+
+Comparing using small files
+
+	$ time ./sfrob < small_file.txt > output
+		real	0m0.002s
+		user	0m0.000s
+		sys		0m0.001s
+	$ time ./sfrobu < small_file.txt > output
+		Comparisons: 424
+
+		real	0m0.004s
+		user	0m0.001s
+		sys		0m0.000s
+	$ time ./sfrobs < small_file.txt > output
+		real	0m0.010s
+		user	0m0.002s
+		sys		0m0.006s
+
+Comparing using median files
+
+	$ time ./sfrob < medium_file.txt > output
+		real	0m0.011s
+		user	0m0.006s
+		sys		0m0.001s
+	$ time ./sfrobu < medium_file.txt > output
+		Comparisons: 91512
+
+		real	0m0.070s
+		user	0m0.005s
+		sys		0m0.061s
+	$ time ./sfrobs < medium_file.txt > output
+		real	0m0.016s
+		user	0m0.010s
+		sys		0m0.002s
+
+Comparing using large files
+
+	$ time ./sfrob < large_file.txt > output
+		real	0m0.964s
+		user	0m0.854s
+		sys		0m0.024s
+	$ time ./sfrobu < large_file.txt > output
+		Comparisons: 14155765
+
+		real	0m6.709s
+		user	0m1.052s
+		sys		0m5.581s
+	$ time ./sfrobs < large_file.txt > output
+		real	0m0.919s
+		user	0m0.838s
+		sys		0m0.032s
+
+The result shows us that when file is large, the speed of the three methods is:
+	
+	sfrob > sfrobs > sfrobu
+
+To find the proportion between the number of comparisons and number of lines:
+
+	small: 	10 		lines -> 424 		comparisons
+	median:	1000 	lines -> 91512 		comparisons
+	large:	100000	lines -> 14155765	comparisons
+
+	The result is greater than O(n) yet smaller than O(n^2), so a guess could be
+	O(nlogn) which is the complexity of qsort.
+
+

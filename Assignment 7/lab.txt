@@ -1,0 +1,74 @@
+
+Laboratory:
+
+	1. 	Wrote tr2b.c that uses getchar() and putchar()
+
+	2. 	Wrote tr2u.c that uses read() and write()
+
+	3. 	Test:
+
+			(a) Number of arguments
+				$ ./tr2b abc 123 kkk
+				 
+			(b) Lenght mismatch
+				$ ./tr2b abc 1234
+
+			(c) Contain duplicates
+				$ ./tr2b aaa 123
+
+	4. Test with strace
+
+			(a)	Create a file containing 5,000,000 bytes
+				$ head --bytes=5000000 /dev/urandom > big_file.txt
+
+			(b)	Test copying one file to another:
+
+				$ strace -o strace_buf_output -c ./tr2b abc 123 < big_file.txt
+				 > output.txt
+				$ cat strace_buf_output
+
+					system calls:
+						write	77
+						read	79
+						total	184
+				
+				$ strace -o strace_unbuf_output -c ./tr2u abc 123 < big_file.txt
+				 > output.txt
+				$ cat strace_unbuf_output
+					
+					system calls:
+						write	5000000
+						read	5000002
+						total	10000026
+
+			(c) Test copying file to terminal 
+
+				$ strace -o strace_buf_output -c ./tr2b abc 123 < big_file.txt
+
+					system calls:
+						write	19945
+						read	79
+						total	20052
+
+				$ strace -o strace_unbuf_output -c ./tr2u abc 123 < big_file.txt
+
+					system calls:
+						write	5000000
+						read	5000002
+						total	10000026
+
+	5.	Use time command to compare them
+
+			$ time ./tr2b abc 123 < big_file.txt > output.txt
+
+				real	0m0.179s
+				user	0m0.097s
+				sys		0m0.008s
+
+			$ time ./tr2u abc 123 < big_file.txt > output.txt
+
+				real	0m5.872s
+				user	0m0.281s
+				sys		0m5.263s
+
+	Therefore, we conclude that buffered I/O is much faster than unbuffered I/O.
