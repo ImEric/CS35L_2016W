@@ -162,7 +162,7 @@ float scaled_color[height][width][3];
 
 void* multithreading(void* thread_num){
 
-    int* thread_number = (int*) thread_num;
+    int thread_number = (int) thread_num;
 
     Vec3 camera_pos;
     set( camera_pos, 0., 0., -4. );
@@ -182,7 +182,7 @@ void* multithreading(void* thread_num){
                       : pixel_dy;
 
     /* for every pixel */
-    for( int px= *thread_number; px<width; px+=nthreads )
+    for( int px= thread_number; px<width; px+=nthreads )
     {
         const double x = pixel_dx * ((double)( px-(width/2) ));
         for( int py=0; py<height; ++py )
