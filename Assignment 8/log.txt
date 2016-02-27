@@ -1,0 +1,62 @@
+1. Prepartion
+
+	a. Check PATH is set to the following
+		$ export PATH=/usr/local/cs/bin:$PATH
+
+	b. Generate file with 10M doubles and seperate them with newline
+		$ od -An -tf -N 80000000 < /dev/urandom | tr -s ' ' '\n' > 10M.txt
+		
+
+3. Time sort using 1, 2, 4, and 8 threads:
+
+	$ time -p sort -g --parallel=1 10M.txt > /dev/null
+
+		real 179.25
+		user 179.06
+		sys  0.23
+
+
+	$ time -p sort -g --parallel=2 10M.txt > /dev/null
+
+		real 94.78
+		user 180.80
+		sys  0.27
+
+
+	$ time -p sort -g --parallel=4 10M.txt > /dev/null
+
+		real 59.88
+		user 191.32
+		sys  0.87
+
+	$ time -p sort -g --parallel=8 10M.txt > /dev/null
+	
+		real 42.27
+		user 204.89
+		sys  3.67
+
+	Thus, this shows that multithreading improves performance significantly.
+
+4. Additional tests
+	
+	$ time -p sort -g 10M.txt > /dev/null
+
+		real 41.12
+		user 206.67
+		sys  0.83
+
+	$ time -p sort -g --parallel=16 10M.txt > /dev/null
+
+		real 37.09
+		user 325.14
+		sys  2.00
+
+	We see that the real time for sort -g without --parallel is approximately 
+	the same as the time taken when --parallel=8. Also when we using 32 threads
+	by setting --parallel=32, the time taken is about the same as 16 threads.
+
+	Thus, we could make wise guesses as the following:
+	1. By default, the seasnet linux server uses 8 threads to sort.
+	2. Seasnet linux server may only have 16 cores.
+
+	
